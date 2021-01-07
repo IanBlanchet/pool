@@ -1,0 +1,10 @@
+<p>Bonjour {{ user.username }},</p>
+<p>
+    Votre pool {{ pool }} est approuvé.  Click sur le lien suivant pour te rendre sur l'application :
+    <a href="{{ url_for('login',_external=True) }}">
+        click ici
+    </a>.
+</p>
+
+<p>Avec dévouement</p>
+<p>L'équipe du Pool_2021</p>

@@ -1,0 +1,89 @@
+
+{% extends 'layout.html' %}
+
+
+
+{% block body %}
+<form action="" method="post" novalidate>
+<div class='container'>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h1>Repêchage - {{ pool_actif.name }}</h1>
+		</div>
+		<div class='col-sm-6'>
+			<h1>Choix complétés</h1> 
+		</div>
+
+	</div>
+
+	<div class='row'>
+		<div class='col-sm-6'>
+			<p></p>
+		</div>
+		<div class='col-sm-6'>
+			<p>{{ counter }}</p> 
+		</div>
+	</div>
+
+	<div class='row'>
+		<div class='col-sm-4'>
+		
+			{{ form.hidden_tag() }}
+			<p>
+			{{ form.joueurs.label }}<br>
+			{{ form.joueurs(size=20, class='form-control') }}<br>
+			{{ form.select(class='btn-primary') }}
+			{% for error in form.joueurs.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+			</p>
+		
+		</div>
+		<div class='col-sm-2'>
+			<p>
+			{{ form.pooler.label }}<br>
+			{{ form.pooler(size=nb_pooler, class='form-control') }}<br>
+			{% for error in form.pooler.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+			</p>
+			
+		
+		</div>
+		<div class='col-sm-6'>
+			<p>
+			{{ form.complet(class='btn-success')}}
+			</p>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+      					<tr>
+        					<th>ordre</th>
+        					<th>Pooler</th>
+        					<th>Choix</th>
+        					<th>Position</th>
+        					<th>Équipe</th>
+      					</tr>
+    				</thead>
+    				<tbody>
+
+    				{% set count = namespace(value=z) %}
+    				{% for choix in selection %}
+      					<tr>
+        					<td>{{ count.value }}</td>
+        					<td>{{ choix.poolers.username }}</td>
+        					<td>{{ choix.stats.nom }}</td>
+        					<td>{{ choix.stats.position }}</td>
+        					<td>{{ choix.stats.equipe }}</td>
+        					{% set count.value = count.value - 1 %}
+      					</tr>
+      				{% endfor %}
+        			</tbody>
+  				</table>
+  			</div>
+		</div>
+	</div>
+
+</div>
+</form>
+{% endblock %}

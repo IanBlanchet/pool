@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <h1 class="display-3">Pool Père-fils</h1>
+        </div>
+        <div class="col-sm-8">
+        	<img src='static/logo-lnh.jpeg', class="img-rounded", alt='Lights', style="width:60%">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+  	<div class="row">
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('accueil_pool') }}"><img src='static/repechage.jpeg' class="img-rounded" alt='Lights' style="width:100%"></a>
+  		</div>
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('projection') }}"><img src='static/statistic.jpeg' class="img-rounded", alt='Lights', style="width:90%"></a>
+  		</div>
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('monpool', user_id=user) }}"><img src='static/monpool.jpeg' class="img-rounded", alt='Lights', style="width:70%"></a>
+  		</div>
+  	</div>  		
+
+  </div>
+  <div class="container">
+  	<div class="row", height='10px'>
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('accueil_pool') }}"><h2>Gestion des pools</h2></a>
+  		</div>
+  			
+  		
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('projection') }}"><h2>Modèle prédictif</h2></a>
+  		</div>
+  		<div class="col-sm-4">
+  			<a href="{{ url_for('monpool', user_id=user) }}"><h2>Classements</h2></a>
+  		</div>
+  	</div>     		
+
+  </div>
+
+  <section id='footer'>
+  	<div class="container-fluid">
+  		<div class="row text-center text-xs-center text-sm-left text-md-left">
+  			{% if current_user.username == 'Ian' %}
+  			<a href="{{ url_for('administration') }}">Administration de l'application</a>
+  			{% endif %}
+  		
+  		</div>
+  	</div>  		
+  </section>
+
+{% include '_flashes.html' %}
+{% endblock %}
+

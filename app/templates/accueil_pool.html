@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<form action="" method="post" novalidate>
+<div class='container'>
+	<div class='row'>
+		<div class='col-sm-8'>
+			<h1>Nouveau pool</h1>
+		</div>
+		<div class='col-sm-4'>
+			<h1>Pools actifs</h1> 
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-sm-2'>
+		
+			{{ form.hidden_tag() }}
+			<p>
+			{{ form.pooler.label }}<br>
+			{{ form.pooler(size=3, class='form-control') }}<br>
+			{{ form.add(class='btn btn-primary') }}
+			{% for error in form.pooler.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+			</p>
+		
+		</div>
+		<div class='col-sm-6'>
+		
+			{{ form.hidden_tag() }}
+			<p>
+			{{ form.name.label }}<br>
+				{% if nom_pool %}
+				{{ form.name(value=nom_pool, class='form-control') }}
+				{% else %}
+				{{ form.name(class='form-control') }}
+				{% endif %}
+			{% for error in form.name.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+			</p>
+			<p>
+			{% for pooler in choix_pooler %}
+			{{ pooler }}<br>
+			{% endfor %}
+			</p>
+			<p onclick='alert("Votre nouveau pool sera approuvé sous peu par votre fringant administrateur")'>
+				<a href='#popupInfo' data-rel='popup' data-transition='pop' title='Assure toi avoir tes poolers avant de créer le pool'>
+			{{ form.creer(class='btn btn-success') }}</a>
+			</p>
+		
+		</div>
+		<div class='col-sm-4'>
+			<p>
+				{% for pool in lespool %}
+				{% if pool.statut == 'repechage'%}
+				<a href="{{ url_for('repechage', pool_id=pool.id ) }}" class="btn btn-info">{{ pool.name }}</a><span class='btn-warning'> statut: {{ pool.statut }}</span>
+				<p>{% for pooler in (pool.poolers.strip('[]').split(',')) %}
+				{{ pooler.strip("' ") }},{% endfor %}</p><br>
+				{% else %}
+				<a href="{{ url_for('monpool', user_id=current_user.id ) }}" class="btn btn-info">{{ pool.name }}</a><span class='btn-warning'> statut: {{ pool.statut }}</span>
+				<p>{% for pooler in (pool.poolers.strip('[]').split(',')) %}
+				{{ pooler.strip("' ") }},{% endfor %}</p><br>
+				{% endif%}
+				{% endfor %}
+			</p>
+		</div>
+	</div>
+
+</div>
+</form>
+{% endblock %}

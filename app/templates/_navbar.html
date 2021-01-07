@@ -1,0 +1,41 @@
+{% macro nav_link(label) %}
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url_for(label) }}">
+        {{ label }}
+    </a>
+  </li>
+{% endmacro %}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand; text-danger" >
+    
+  </a>
+  <button type="button"
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      {{ nav_link('home') }}
+      {% if current_user.is_anonymous %}
+      <span class="glyphicon glyphicon-user"></span>{{ nav_link('login') }}
+      {% else %}
+      <span class="glyphicon glyphicon-remove-circle"></span>{{ nav_link('logout') }}
+      {% endif %}
+      
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {% if current_user %}
+      <li class="text-info">User : <a href="{{ url_for('usager', username=current_user.username ) }}" >{{ current_user.username }}</a></li>
+      {% else %}
+      <li class="text-info">User : None </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

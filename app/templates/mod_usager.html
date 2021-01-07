@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+	<h1>Modification de l'usager</h1>
+	<form action="" method="post" novalidate>
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.username.label }}<br>
+			{{ form.username(size=32, value=usager.username) }}
+			{% for error in form.username.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		<p>
+			{{ form.email.label }}<br>
+			{{ form.email(size=64, value=usager.email) }}
+			{% for error in form.email.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		<p>
+			{{ form.nouveaupass.label }}<br>
+			{{ form.nouveaupass(size=32) }}
+			{% for error in form.nouveaupass.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		<p>
+			{{ form.nouveaupass2.label }}<br>
+			{{ form.nouveaupass2(size=32) }}
+			{% for error in form.nouveaupass2.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+
+
+
+		<p>
+			{{ form.password.label }} - Actuel<br>
+			{{ form.password(size=32) }}
+			{% for error in form.password.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+
+
+		<p>{{ form.submit(class='btn-warning') }}</p>
+	</form>
+{% include '_flashes.html' %}
+{% endblock %}

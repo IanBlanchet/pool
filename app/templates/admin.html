@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<form action="" method="post" novalidate>
+	<div class='row'>
+		<div class='col-sm-4'>
+		
+			{{ form.hidden_tag() }}
+			<p>
+			{{ form.pool.label }}<br>
+			{{ form.pool(size=3, class='form-control') }}<br>
+			{{ form.approuve_pool(class='btn-primary') }}<br>
+			{{ form.selection.label }}<br>
+			{{ form.selection(size=3, class='form-control') }}<br>
+			
+			{% for error in form.pool.errors %}
+			<span style="color: red">[{{ error }}]</span>
+			{% endfor %}
+			</p>
+			{{ form.routine }}
+		</div>
+	</div>
+</form>
+
+{% endblock %}
