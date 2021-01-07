@@ -1,0 +1,289 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"h",
+				"h1\tTag"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 136.0,
+		"history":
+		[
+			"python3",
+			"python3 test.py",
+			"python test.py"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/ian/Documents/pool_2021/app/templates/monpool.html",
+		"/home/ian/Documents/pool_2021/app/templates/projection.html",
+		"/home/ian/Documents/pool_2021/app/templates/accueil_pool.html",
+		"/home/ian/Documents/pool_2021/app/templates/admin.html",
+		"/home/ian/Documents/pool_2021/app/templates/repechage.html",
+		"/home/ian/Documents/pool_2021/app/templates/mod_usager.html",
+		"/home/ian/Documents/pool_2021/app/templates/register.html",
+		"/home/ian/Documents/pool_2021/app/templates/login.html",
+		"/home/ian/Documents/pool_2021/app/templates/index.html",
+		"/home/ian/Documents/pool_2021/app/templates/layout.html",
+		"/home/ian/Documents/pool_2021/app/templates/reset_password.html",
+		"/home/ian/Documents/pool_2021/app/templates/_navbar.html",
+		"/home/ian/Documents/pool_2021/app/templates/_flashes.html",
+		"/home/ian/Documents/pool_2021/config.py",
+		"/home/ian/Documents/pool_2021/app/forms.py",
+		"/home/ian/Documents/pool_2021/app/routes.py",
+		"/home/ian/Documents/pool_2021/app/email.py",
+		"/home/ian/Documents/pool_2021/app/models.py",
+		"/home/ian/Documents/pool_2021/app/__init__.py",
+		"/home/ian/Documents/pool_2021/app/pool.py",
+		"/home/ian/Documents/pool_2021/app/templates/email/pool_appro.html",
+		"/home/ian/Documents/pool_2021/app/templates/email/pool_appro.txt",
+		"/home/ian/Documents/app_pool/calcul.py",
+		"/home/ian/Documents/pool_2021/app/static/main.css",
+		"/home/ian/Documents/bordereau/templates/decompte.html",
+		"/home/ian/Documents/pool_2021/app/templates/email/reset_password.html",
+		"/home/ian/Documents/pool_2021/app/templates/email/reset_password.txt",
+		"/home/ian/myapp/routes.py",
+		"/home/ian/Documents/pool_2021/app/templates/reset_password_request.html",
+		"/home/ian/myapp/templates/det_abonne.html",
+		"/home/ian/myapp/templates/rapport_alerte.html",
+		"/home/ian/myapp/templates/appel_quotidien.html",
+		"/home/ian/Documents/app_pool/app.py",
+		"/home/ian/Documents/extrait_fund/app.py",
+		"/home/ian/Documents/extrait_fund/extrait_simfin.py",
+		"/home/ian/Documents/hello-flask-unchained/templates/_navbar.html",
+		"/home/ian/Documents/hello-flask-unchained/templates/layout.html",
+		"/home/ian/myapp/templates/mod_abonne.html",
+		"/home/ian/Documents/bordereau/route.py",
+		"/home/ian/Documents/pool_2021/blueprint.py",
+		"/home/ian/Documents/pool_2021/templates/layout.html",
+		"/home/ian/Documents/pool_2021/templates/index.html",
+		"/home/ian/Documents/pool_2021/static/bootstrap-v4.1.2.min.css",
+		"/home/ian/Documents/pool_2021/templates/_navbar.html",
+		"/home/ian/Documents/pool_2021/app.py",
+		"/home/ian/Documents/hello-flask-unchained/unchained_config.py",
+		"/home/ian/Documents/hello-flask-unchained/app.py",
+		"/home/ian/Documents/hello-flask-unchained/test_app.py",
+		"/home/ian/Documents/hello-flask-unchained/templates/site/hello.html",
+		"/home/ian/Documents/hello-flask-unchained/views.py",
+		"/home/ian/Documents/hello-flask-unchained/static/main.css",
+		"/home/ian/Documents/hello-flask-unchained/templates/site/index.html",
+		"/home/ian/Documents/hello-flask-unchained/templates/_flashes.html",
+		"/home/ian/myapp/templates/base.html",
+		"/home/ian/Documents/pool_2021/static/popper-v1.14.3.min.js",
+		"/home/ian/Documents/pool_2021/static/main.css",
+		"/home/ian/myapp/templates/menu.html",
+		"/home/ian/Documents/pool_2021/static/jquery-v3.3.1.slim.min.js",
+		"/home/ian/Documents/pool_2021/static/bootstrap-v4.1.2.min.js",
+		"/home/ian/myapp/model.py",
+		"/home/ian/myapp/app.py",
+		"/home/ian/myapp/templates/accueil.html",
+		"/home/ian/Documents/hello-flask-unchained/templates/index.html",
+		"/home/ian/Documents/hello-flask-unchained/templates/hello.html",
+		"/home/ian/Documents/pool_2021/api.py",
+		"/home/ian/myapp/static/styles.css",
+		"/media/ian/ssd/testprogrammation/Bilan_trans/gain_jour.py",
+		"/home/ian/Documents/extrait_fund/templates/menu.html",
+		"/home/ian/Documents/extrait_fund/templates/dupont.html",
+		"/home/ian/Documents/extrait_fund/routes.py",
+		"/home/ian/Documents/bordereau/app.py",
+		"/home/ian/Documents/extrait_fund/templates/decompte.html",
+		"/home/ian/Documents/extrait_fund/templates/modification.html",
+		"/home/ian/Documents/Extrac_fundam/extrait_simfin.py",
+		"/home/ian/Documents/Bonjour_q/templates/base.html",
+		"/home/ian/Documents/Bonjour_q/templates/register.html",
+		"/home/ian/Documents/Bonjour_q/templates/accueil.html",
+		"/home/ian/Documents/Bonjour_q/templates/menu.html",
+		"/home/ian/Documents/Bonjour_q/peuple_table.py",
+		"/home/ian/Documents/Bonjour_q/model.py",
+		"/home/ian/Documents/Bonjour_q/app.py",
+		"/home/ian/Documents/Bonjour_q/routes.py",
+		"/home/ian/Documents/bonjour_quot/app.py",
+		"/home/ian/Documents/test_heroku/app.py",
+		"/home/ian/myapp/static/code.js",
+		"/home/ian/Documents/bordereau/templates/menu.html",
+		"/home/ian/myapp/script/code.js",
+		"/home/ian/Documents/extrait_gi/hash_data.py",
+		"/home/ian/Documents/ville/hash_data.py",
+		"/home/ian/Documents/bordereau/templates/base.html",
+		"/home/ian/Documents/bordereau/static/styles.css",
+		"/home/ian/myapp/static/styles-old.css",
+		"/home/ian/myapp/templates/absence.html",
+		"/home/ian/Documents/html_css_prat/main.html",
+		"/home/ian/Documents/html_css_prat/style_ex.css",
+		"/home/ian/myapp/templates/login.html",
+		"/home/ian/myapp/cab.sublime-project",
+		"/home/ian/myapp/templates/styles.css",
+		"/home/ian/Documents/connect_IB/app.py",
+		"/home/ian/myapp/templates/ajout_abonne.html",
+		"/home/ian/myapp/.gitignore",
+		"/home/ian/myapp/templates/mod_abonne .html",
+		"/home/ian/Documents/bordereau/model.py",
+		"/home/ian/Documents/bordereau/extract_data.py",
+		"/home/ian/myapp/templates/register.html",
+		"/home/ian/myapp/templates/appel_jour.html",
+		"/home/ian/myapp/abonne",
+		"/home/ian/Documents/pool_heroku/__init__.py",
+		"/home/ian/Documents/pool_heroku/heroku_app/templates/base.html",
+		"/home/ian/Documents/pool_heroku/heroku_app/__init__.py",
+		"/home/ian/Documents/pool_heroku/heroku_app/calcul.py",
+		"/home/ian/Documents/test_heroku/templates/base.html",
+		"/home/ian/Documents/test_heroku/templates/index.html",
+		"/home/ian/Documents/test_heroku/index.html",
+		"/home/ian/myapp/templates/index.html",
+		"/media/ian/ssd/testprogrammation/CAB/interface.py",
+		"/media/ian/ssd/testprogrammation/CAB/hash_data.py",
+		"/home/ian/Desktop/test.py"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Python/Python.sublime-build",
+	"project": "poolapps.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

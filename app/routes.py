@@ -1,0 +1,8 @@
+from app import app
+
+
+
+@app.route('/')
+def home():
+	
+	return {'test': 'un test'}
