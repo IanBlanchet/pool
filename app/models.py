@@ -50,6 +50,7 @@ class Joueur(db.Model):
 	pool = db.relationship('Selection', backref='stats', lazy='dynamic')
 
 
+
 class Pool(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(120), index=True, unique=True)
@@ -58,12 +59,16 @@ class Pool(db.Model):
 	selectionneur = db.Column(db.String(64))
 	statut = db.Column(db.String(16), default='en_appro')
 	pool = db.relationship('Selection', backref='pools', lazy='dynamic')
+	
+	
 
 class Selection(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	joueur_alias =  db.Column(db.String(9), db.ForeignKey('joueur.alias'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	pool_id = db.Column(db.Integer, db.ForeignKey('pool.id'))
+
+
 
 #les statitiques des années précédentes
 class2020 = {'Fred': [76,129,205], 'Leo':[58,86,144], 'Ben':[53,86,139], 'Stef':[55,78,133], 'Ian':[50,	82,	132], 'Will':[52,80,132] }

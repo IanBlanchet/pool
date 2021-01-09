@@ -7,7 +7,7 @@ from app.models import User, Joueur, Pool, Selection, class2020
 from werkzeug.urls import url_parse
 from datetime import date, datetime
 import pandas as pd
-from app.email import send_password_reset_email, pool_appro
+from app.email import send_password_reset_email, pool_appro, accueil_pooler
 from collections import Counter
 
 
@@ -45,6 +45,7 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
+		accueil_pooler(user)
 		return redirect(url_for('login'))
 
 	return render_template('register.html', form=form)
@@ -371,6 +372,19 @@ def administration():
 
 		#lance une routine de mise à jour
 		if form.routine.data:
+			#ajout des joueurs à partir d'une liste
+			'''df = pd.read_csv('recrue.csv')
+			for i in range(len(df)):
+				if not Joueur.query.filter_by(nom=df.loc[i,'Nom']).first():
+					recrue = Joueur(alias=df.loc[i,'Alias'], nom=df.loc[i,'Nom'],age=int(df.loc[i,'Age']), \
+					position=df.loc[i,'Position'], equipe=df.loc[i,'Equipe'])
+					db.session.add(recrue)
+					db.session.commit()
+				else:
+					print(df.loc[i,'Nom'])'''
+			user = User.query.filter_by(username='Bibi').first()
+			db.session.delete(user)
+			db.session.commit()	
 
 
 			return redirect(url_for('home'))

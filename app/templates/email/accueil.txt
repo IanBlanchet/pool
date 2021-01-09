@@ -1,0 +1,10 @@
+Bonjour {{ user.username }},
+
+Bienvenue sur le site du pool père-fils.  Je développe tranquillement ce site afin d'améliorer mes connaissances dans la datascience.  C'est fonctionel mais soit indulgent.
+Click sur le lien suivant pour te rendre sur l'application :
+
+{{ url_for('home', _external=True) }}
+
+Have fun!,
+
+Ian

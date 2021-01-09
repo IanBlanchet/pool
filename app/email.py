@@ -22,3 +22,9 @@ def pool_appro(poolers, pool):
 		recipients=[user[1]],text_body=render_template('email/pool_appro.txt',\
 			user=user[0], pool=pool),html_body=render_template('email/pool_appro.html',\
 			user=user[0], pool=pool))
+
+def accueil_pooler(user):
+	send_email('[Pool Père-Fils] Bienvenue', sender=app.config['ADMINS'][0],\
+    	recipients=[user.email],text_body=render_template('email/accueil.txt',\
+    		user=user),html_body=render_template('email/accueil.html',\
+    		user=user))

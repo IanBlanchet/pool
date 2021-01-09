@@ -31,12 +31,18 @@
 			{{ form.hidden_tag() }}
 			<p>
 			{{ form.joueurs.label }}<br>
-			{{ form.joueurs(size=20, class='form-control') }}<br>
+			{{ form.joueurs(size=20, class='form-control', ondblclick='affPlayer()') }}<br>
 			{{ form.select(class='btn btn-primary') }}
 			{% for error in form.joueurs.errors %}
 			<span style="color: red">[{{ error }}]</span>
 			{% endfor %}
 			</p>
+			<script>
+				function affPlayer(){
+					alert('test')
+
+				}
+			</script>
 		
 		</div>
 		<div class='col-sm-2'>
