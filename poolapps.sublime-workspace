@@ -11,6 +11,91 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/__init__.py",
+			"settings":
+			{
+				"buffer_size": 470,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "from flask import Flask"
+			}
+		},
+		{
+			"file": "app/models.py",
+			"settings":
+			{
+				"buffer_size": 2478,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "config.py",
+			"settings":
+			{
+				"buffer_size": 517,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/forms.py",
+			"settings":
+			{
+				"buffer_size": 2921,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "from app import app, db\nfrom flask import render_template, flash, redirect, url_for, request\nfrom app.forms import LoginForm, RegistrationForm, PoolForm, PecheForm, \\\nResetPasswordRequestForm, ResetPasswordForm, ModUsager, Admin\nfrom flask_login import current_user, login_user, logout_user, login_required\nfrom app.models import User, Joueur, Pool, Selection, class2020\nfrom werkzeug.urls import url_parse\nfrom datetime import date, datetime\nimport pandas as pd\nfrom app.email import send_password_reset_email, pool_appro\nfrom collections import Counter\n\n\n@app.route(\"/login\", methods=[\"GET\", \"POST\"])\ndef login():\n\tif current_user.is_authenticated:\n\t\treturn redirect(url_for('home'))\n\tform = LoginForm(crsf_enabled=False)\n\tif form.validate_on_submit():\n\t\tuser = User.query.filter_by(username=form.username.data).first()\n\t\tif user is None or not user.check_password(form.password.data):\n\t\t\tflash('Mauvais mot de passe')\n\t\t\treturn redirect(url_for('login'))\n\t\tlogin_user(user, remember=form.remember_me.data)\n\t\tnext_page = request.args.get('next')\n\t\tif not next_page or url_parse('next_page').netloc != '':\n\t\t\tnext_page = url_for('home')\n\t\treturn redirect(next_page)\n\n\treturn render_template('login.html', form=form)\n\n@app.route(\"/logout\")\ndef logout():\n\tlogout_user()\n\treturn redirect(url_for('home'))\n\n\n@app.route(\"/register\", methods=[\"GET\", \"POST\"])\ndef register():\n\tif current_user.is_authenticated:\n\t\treturn redirect(url_for('home'))\n\tform = RegistrationForm(crsf_enabled=False)\n\tif form.validate_on_submit():\n\t\tuser = User(username=form.username.data, email=form.email.data)\n\t\tuser.set_password(form.password.data)\n\t\tdb.session.add(user)\n\t\tdb.session.commit()\n\t\treturn redirect(url_for('login'))\n\n\treturn render_template('register.html', form=form)\n\n@app.route(\"/\", methods=[\"GET\", \"POST\"])\n@app.route(\"/home\")\ndef home():\n\tuser=0\n\tif current_user.is_authenticated:\n\t\tuser = current_user.id\n\treturn render_template('index.html', user=user)\n\n@app.route(\"/<string:username>\", methods=[\"GET\", \"POST\"])\n@login_required\n#modification d'un usager\ndef usager(username):\n\tform=ModUsager(crsf_enabled=False)\n\tusager_courant = User.query.filter_by(username = username).first()\n\n\tif form.nouveaupass.data:\n\t\tif form.validate_on_submit():\n\t\t\tusager_courant.set_password(form.nouveaupass.data)\n\t\t\t\n\t\t\tusager_courant.username=form.username.data\n\t\t\tusager_courant.email=form.email.data\n\t\t\tif usager_courant.check_password(form.password.data):\n\t\t\t\tdb.session.commit()\n\t\t\t\treturn redirect(url_for('home'))\n\t\t\telse:\n\t\t\t\tflash('Mauvais mot de passe')\n\telse:\n\t\tif form.validate_on_submit():\n\t\t\tusager_courant.username=form.username.data\n\t\t\tusager_courant.email=form.email.data\n\t\t\tif usager_courant.check_password(form.password.data):\n\t\t\t\tdb.session.commit()\n\t\t\t\treturn redirect(url_for('home'))\n\t\t\telse:\n\t\t\t\tflash('Mauvais mot de passe')\n\n\n\treturn render_template('mod_usager.html', form=form, usager=usager_courant)\n\n@app.route('/reset_password_request', methods=['GET', 'POST'])\ndef reset_password_request():\n    if current_user.is_authenticated:\n        return redirect(url_for('home'))\n    form = ResetPasswordRequestForm(crsf_enabled=False)\n    if form.validate_on_submit():\n        user = User.query.filter_by(email=form.email.data).first()\n        if user:\n            send_password_reset_email(user)\n        flash('Check your email for the instructions to reset your password')\n        return redirect(url_for('login'))\n    return render_template('reset_password_request.html', title='Reset Password', form=form)\n\n@app.route('/reset_password/<token>', methods=['GET', 'POST'])\ndef reset_password(token):\n\tif current_user.is_authenticated:\n\t\treturn redirect(url_for('home'))\n\tuser = User.verify_reset_password_token(token)\n\tif not user:\n\t\treturn redirect(url_for('home'))\n\tform = ResetPasswordForm(crsf_enabled=False)\n\tif form.validate_on_submit():\n\t\tuser.set_password(form.password.data)\n\t\tdb.session.commit()\n\t\treturn redirect(url_for('login'))\n\treturn render_template('reset_password.html', form=form)\n\n\n\n\n#à réviser afin de créer la liste sur frontend en JS\nchoix_pooler = []\n\n@app.route(\"/accueil_pool\", methods=[\"GET\", \"POST\"])\n@login_required\ndef accueil_pool():\n\tform = PoolForm(crsf_enabled=False)\n\tform.pooler.choices=[(str(pooler.username)) for pooler in User.query.order_by(User.id).all()]\n\tlespool = Pool.query.filter(Pool.statut != 'en_appro').all()\n\t#ajoute un pooler dans le pool\n\tif form.add.data and form.pooler.data and form.name.data :\n\n\t\tif form.pooler.data not in choix_pooler:\n\t\t\tchoix_pooler.append(form.pooler.data)\n\t\t\tnom_pool = form.name.data\n\t\t\treturn render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=choix_pooler, nom_pool=nom_pool)\n\t\telse:\n\t\t\tnom_pool = form.name.data\n\t\t\treturn render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=choix_pooler, nom_pool=nom_pool)\n\n\t#creer le nouveau pool dans la bd\n\tif form.creer.data and form.name.data:\n\t\tif form.validate_on_submit():\n\t\t#if form.name.data not in [pool.name for pool in lespool]:\n\t\t\tnouv_pool = Pool(name=form.name.data, poolers=str(choix_pooler), creation=date.today())\n\t\t\tdb.session.add(nouv_pool)\n\t\t\tdb.session.commit()\n\t\t\tchoix_pooler.clear()\n\t\t\tlespool = Pool.query.filter(Pool.statut != 'en_appro').all()\n\t\t\treturn render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=[])\n\tchoix_pooler.clear()\n\n\treturn render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=choix_pooler)\n\t\n\n@app.route(\"/repechage/<int:pool_id>\", methods=[\"GET\", \"POST\"])\n@login_required\ndef repechage(pool_id):\n\n\t#extraire les données pertiente\n\tpool_actif = Pool.query.filter_by(id = pool_id).first()\n\tjoueurs = Joueur.query.all()\n\tselection = Selection.query.filter_by(pool_id = pool_id).all()\n\t#count le nombre de choix par pooler\n\tlist_joueur_select = [select.poolers.username for select in selection]\n\tcount_pooler = Counter(list_joueur_select)\n\t\n\n\t#organise le form\n\tform = PecheForm(crsf_enabled=False)\n\tchoix_joueur = []\n\n\n\t#form.joueurs.choices=[(joueur.nom +' - '+joueur.position+' - '+joueur.equipe) for joueur in joueurs]\n\tlist_poolers = [pooler.strip(\"' \") for pooler in (pool_actif.poolers.strip('[]').split(','))]\n\tform.pooler.choices=list_poolers\n\tnb_pooler = len(list_poolers)\n\n\n\tif form.select.data and form.joueurs.data and form.pooler.data:\n\t\tid_joueur = form.joueurs.data.split('-')\n\t\tid_joueur = int(id_joueur[0])\n\t\tpooler_id = User.query.filter_by(username=form.pooler.data).first()\n\t\tjoueur_alias = Joueur.query.filter_by(id= id_joueur).first()\n\t\talias = joueur_alias.alias\n\n\t\t\n\n\t\tla_selection = Selection(joueur_alias=alias, user_id=pooler_id.id, pool_id=pool_id )\n\t\tdb.session.add(la_selection)\n\t\tdb.session.commit()\n\n\tselection = Selection.query.filter_by(pool_id = pool_id).all()\n\tlist_joueur_select = [select.poolers.username for select in selection]\n\tcount_pooler = Counter(list_joueur_select)\n\n\talias_selection = [select.joueur_alias for select in selection]\n\tchoix_joueur.clear()\n\tfor joueur in joueurs:\n\t\tif joueur.alias not in alias_selection:\n\t\t\tchoix_joueur.append(str(joueur.id) + '- ' + joueur.nom +' - '+joueur.position+' - '+joueur.equipe)\n\tform.joueurs.choices=choix_joueur\n\tz = len(selection)\n\tselection = reversed(selection)\n\t\n\tif form.complet.data:\n\t\tpool_actif.statut = 'actif'\n\t\tdb.session.commit()\n\t\treturn redirect(url_for('accueil_pool'))\n\t\n\tif form.undo.data:\n\t\tdb.session,rollback()\n\n\n\treturn render_template('repechage.html', form=form, nb_pooler=nb_pooler, pool_actif=pool_actif, \\\n\t\tselection=selection, counter=count_pooler, z=z)\n\n\n\n@app.route(\"/projection\", methods=[\"GET\", \"POST\"])\n@login_required\ndef projection():\n\t\n\t\treturn render_template('projection.html')\n\n\n\n@app.route(\"/monpool/<int:user_id>\", methods=[\"GET\", \"POST\"])\n@login_required\ndef monpool(user_id):\n\n\tstats_detail = pd.read_html(\"https://www.hockey-reference.com/leagues/NHL_2020_skaters.html\", header=1)[0]\n\tdetail = pd.DataFrame(stats_detail)\n\tstats = detail[['Player', 'G', 'A', 'PTS']]\n\tstats.fillna(0, inplace=True)\n\t#creer une routine pour accéder seulement au pool de l'usager logger\n\t\n\tmes_pools=[]\n\n\tfor pool in Pool.query.filter_by(statut='actif'):\n\t\tif Selection.query.filter((Selection.pool_id == pool.id) & (Selection.user_id==user_id)).first():\n\t\t\tdata = Selection.query.join(User).join(Joueur).filter(Selection.pool_id == pool.id).all()\n\t\t\t\n\t\t\tpool_data = pd.DataFrame(columns=['Joueur', 'Pooler', 'G', 'A', 'PTS'])\n\t\t\tfor select in data:\n\t\t\t\t\n\t\t\t\tpool_data = pool_data.append({'Joueur':select.stats.nom,'Pooler':select.poolers.username}, ignore_index=True)\n\n\n\n\t\t\tfor i in range(len(pool_data)):\n\t\t\t\tjoueur = stats[stats.Player == pool_data.iloc[i,0]]\n\t\t\t\ttry:\n\t\t\t\t\tnb_but = int(joueur.G)\n\t\t\t\t\tnb_pass = int(joueur.A)\n\t\t\t\t\tnb_pts = int(joueur.PTS)\n\t\t\t\t\tpool_data.iloc[i,2] = nb_but\n\t\t\t\t\tpool_data.iloc[i,3] = nb_pass\n\t\t\t\t\tpool_data.iloc[i,4] = nb_pts\n\t\t\t\texcept:\n\t\t\t\t\tcontinue\n\t\t\tsommaire = pool_data.groupby(['Pooler']).sum()\n\t\t\tsommaire.sort_values('PTS',ascending=False,inplace=True)\n\t\t\tsommaire= sommaire[['G', 'A', 'PTS']]\n\t\t\tsommaire = sommaire.reset_index()\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\tmes_pools.append([len(sommaire), pool.name, sommaire])\n\n\t\t\t\n\treturn render_template('monpool.html', mes_pools=mes_pools, histo=class2020)\n\n\n@app.route(\"/administration\", methods=[\"GET\", \"POST\"])\n@login_required\ndef administration():\n\n\t# code utilisé pour meubler la base de données des joueurs\n\t\"\"\"stats_detail = pd.read_html(\"https://www.hockey-reference.com/leagues/NHL_2020_skaters.html\", header=1)[0]\n\tdetail = pd.DataFrame(stats_detail)\n\tstat_2020 = detail[['Rk', 'Tm', 'Pos','Player', 'Age', 'G', 'A', 'PTS']]\n\tstat_2020.fillna(0, inplace=True)\n\tstat_2020 = stat_2020.drop_duplicates(subset='Rk', keep='last', ignore_index=True)\n\tstat_2020 = stat_2020[stat_2020.Player != 'Player']\n\tstat_2020.reset_index(inplace=True, drop=True)\n\t\n\tserie_alias = []\n\tfor i in range(len(stat_2020)):\n\t\tnom = stat_2020.loc[i,'Player']\n\t\tif \"-\" in nom:\n\t\t\tnom = nom.replace('-', '')\n\t\tif \".\" in nom:\n\t\t\tnom = nom.replace('.', '')\n\t\tif \"'\" in nom:\n\t\t\tnom = nom.replace(\"'\", '')\n\t\tif \"*\" in nom:\n\t\t\tnom = nom.replace(\"*\", '')\n\t\tnom_split = nom.split()\n\t\talias = nom_split[1][0:5].lower() + nom_split[0][0:2].lower()\n\t\tserie_alias.append(alias)\n\tstat_2020['alias'] = serie_alias\n\tstat_2020['duplic'] = stat_2020.duplicated(subset='alias', keep='first')\n\tserie_num = []\n\tz=1\n\tfor i in range(len(stat_2020)):\n\t\tif stat_2020.loc[i,'duplic'] == False:\n\t\t\tz=1\n\t\t\tserie_num.append(z)\n\t\t\t\n\t\telse:\n\t\t\tserie_num.append(z+1)\n\t\t\tz += 1\n\tstat_2020['num'] = serie_num\n\t\n\tfor i in range(len(stat_2020)):\n\t\tnom= stat_2020.loc[i,'Player']\n\t\tposition = stat_2020.loc[i,'Pos']\n\t\tage = stat_2020.loc[i,'Age']\n\t\tequipe = stat_2020.loc[i,'Tm']\n\t\talias = stat_2020.loc[i,'alias'] + '0' + str(stat_2020.loc[i,'num'])\n\t\tle_joueur = Joueur(nom=nom, position=position, age=age, equipe=equipe, alias=alias)\n\t\tdb.session.add(le_joueur)\n\t\tdb.session.commit()\"\"\"\n\n\t#valide si c'est moi\n\tif current_user.username == 'Ian':\n\t\tpool_attent = Pool.query.filter_by(statut = 'en_appro').all()\n\t\tform = Admin(crsf_enabled=False)\n\t\tform.pool.choices=[pool.name for pool in pool_attent]\n\t\t\n\t\t#approuve un nouveau pool\n\t\tif form.pool.data and form.approuve_pool.data:\n\t\t\t#change le statut du pool\n\t\t\tpool_app = Pool.query.filter_by(name=form.pool.data).first()\n\t\t\tpool_app.statut = 'repechage'\n\t\t\tdb.session.commit()\n\t\t\t#extrait les poolers du pool\n\t\t\tles_poolers = [pooler.strip(\"' \") for pooler in pool_app.poolers.strip('[]').split(',')]\n\t\t\tlist_email = [User.query.filter_by(username=pooler).first().email for pooler in les_poolers]\n\t\t\tles_poolers = list(zip(les_poolers, list_email))\n\t\t\t#envoi un courriel de confirmation\n\t\t\tpool_appro(les_poolers, pool_app.name)\n\n\t\t\tpool_attent = Pool.query.filter_by(statut = 'en_appro').all()\n\t\t\tform.pool.choices=[pool.name for pool in pool_attent]\n\n\t\t#lance une routine de mise à jour\n\t\tif form.routine.data:\n\n\n\t\t\treturn redirect(url_for('home'))\n\n\n\t\treturn render_template('admin.html', form=form)\n\n\n\treturn redirect(url_for('home'))",
+			"file": "app/routes.py",
+			"file_size": 11959,
+			"file_write_time": 132546154882243881,
+			"settings":
+			{
+				"buffer_size": 11997,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/ian/Documents/desk_app/test.py",
+			"settings":
+			{
+				"buffer_size": 2074,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pool.py",
+			"settings":
+			{
+				"buffer_size": 19,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "from app import app"
+			}
+		},
+		{
+			"file": "app/templates/monpool.html",
+			"settings":
+			{
+				"buffer_size": 1350,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/templates/repechage.html",
+			"settings":
+			{
+				"buffer_size": 1944,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -47,6 +132,9 @@
 	},
 	"file_history":
 	[
+		"/home/ian/Documents/apppools/Procfile",
+		"/home/ian/Documents/pool_2021/app/__init__.py",
+		"/home/ian/Documents/pool_2021/app/routes.py",
 		"/home/ian/Documents/pool_2021/app/templates/monpool.html",
 		"/home/ian/Documents/pool_2021/app/templates/projection.html",
 		"/home/ian/Documents/pool_2021/app/templates/accueil_pool.html",
@@ -62,10 +150,8 @@
 		"/home/ian/Documents/pool_2021/app/templates/_flashes.html",
 		"/home/ian/Documents/pool_2021/config.py",
 		"/home/ian/Documents/pool_2021/app/forms.py",
-		"/home/ian/Documents/pool_2021/app/routes.py",
 		"/home/ian/Documents/pool_2021/app/email.py",
 		"/home/ian/Documents/pool_2021/app/models.py",
-		"/home/ian/Documents/pool_2021/app/__init__.py",
 		"/home/ian/Documents/pool_2021/app/pool.py",
 		"/home/ian/Documents/pool_2021/app/templates/email/pool_appro.html",
 		"/home/ian/Documents/pool_2021/app/templates/email/pool_appro.txt",
@@ -199,8 +285,275 @@
 	"groups":
 	[
 		{
+			"selected": 5,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/__init__.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 470,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								51,
+								51
+							]
+						],
+						"settings":
+						{
+							"auto_name": "from flask import Flask",
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/models.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2478,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2371,
+								2371
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 239.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "config.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 517,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								517,
+								517
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/forms.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2921,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1827,
+								1827
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/routes.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11997,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6244,
+								6244
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2340.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/ian/Documents/desk_app/test.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2074,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1207,
+								1207
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "pool.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19,
+								19
+							]
+						],
+						"settings":
+						{
+							"auto_name": "from app import app",
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 7,
+					"file": "app/templates/monpool.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1350,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								555,
+								555
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "app/templates/repechage.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1944,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								618,
+								618
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 450.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -221,11 +574,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":

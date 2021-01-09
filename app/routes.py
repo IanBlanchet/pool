@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from app.forms import LoginForm, RegistrationForm, PoolForm, PecheForm, \
 ResetPasswordRequestForm, ResetPasswordForm, ModUsager, Admin
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Joueur, Pool, Selection #class2020
+from app.models import User, Joueur, Pool, Selection, class2020
 from werkzeug.urls import url_parse
 from datetime import date, datetime
 import pandas as pd
@@ -190,6 +190,13 @@ def repechage(pool_id):
 		db.session.add(la_selection)
 		db.session.commit()
 
+	#annule la dernière selection
+	if form.undo.data:
+		selections = Selection.query.filter_by(pool_id = pool_id).all()
+		dernier_select = selections[len(selections)-1]
+		db.session.delete(dernier_select)
+		db.session.commit()
+
 	selection = Selection.query.filter_by(pool_id = pool_id).all()
 	list_joueur_select = [select.poolers.username for select in selection]
 	count_pooler = Counter(list_joueur_select)
@@ -203,10 +210,12 @@ def repechage(pool_id):
 	z = len(selection)
 	selection = reversed(selection)
 	
+	#ferme un rêpechage
 	if form.complet.data:
 		pool_actif.statut = 'actif'
 		db.session.commit()
 		return redirect(url_for('accueil_pool'))
+
 
 
 	return render_template('repechage.html', form=form, nb_pooler=nb_pooler, pool_actif=pool_actif, \
@@ -237,7 +246,7 @@ def monpool(user_id):
 	for pool in Pool.query.filter_by(statut='actif'):
 		if Selection.query.filter((Selection.pool_id == pool.id) & (Selection.user_id==user_id)).first():
 			data = Selection.query.join(User).join(Joueur).filter(Selection.pool_id == pool.id).all()
-			#selection = pd.read_sql(test.filter_by(pool_id=pool.id).all())
+			
 			pool_data = pd.DataFrame(columns=['Joueur', 'Pooler', 'G', 'A', 'PTS'])
 			for select in data:
 				
@@ -267,7 +276,7 @@ def monpool(user_id):
 			mes_pools.append([len(sommaire), pool.name, sommaire])
 
 			
-	return render_template('monpool.html', mes_pools=mes_pools)
+	return render_template('monpool.html', mes_pools=mes_pools, histo=class2020)
 
 
 @app.route("/administration", methods=["GET", "POST"])
@@ -275,7 +284,7 @@ def monpool(user_id):
 def administration():
 
 	# code utilisé pour meubler la base de données des joueurs
-	'''stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2020_skaters.html", header=1)[0]
+	"""stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2020_skaters.html", header=1)[0]
 	detail = pd.DataFrame(stats_detail)
 	stat_2020 = detail[['Rk', 'Tm', 'Pos','Player', 'Age', 'G', 'A', 'PTS']]
 	stat_2020.fillna(0, inplace=True)
@@ -319,21 +328,22 @@ def administration():
 		alias = stat_2020.loc[i,'alias'] + '0' + str(stat_2020.loc[i,'num'])
 		le_joueur = Joueur(nom=nom, position=position, age=age, equipe=equipe, alias=alias)
 		db.session.add(le_joueur)
-		db.session.commit()'''
+		db.session.commit()"""
 
 	#valide si c'est moi
 	if current_user.username == 'Ian':
 		pool_attent = Pool.query.filter_by(statut = 'en_appro').all()
 		form = Admin(crsf_enabled=False)
-		form.pool.choices=[pool.name for pool in pool_attent]
-		
+		form.pool_appro.choices=[pool.name for pool in pool_attent]
+		form.list_pool.choices=[pool.name for pool in Pool.query.all()]
+
 		#approuve un nouveau pool
-		if form.pool.data and form.approuve_pool.data:
+		if form.pool_appro.data and form.approuve_pool.data:
 			#change le statut du pool
-			pool_app = Pool.query.filter_by(name=form.pool.data).first()
+			pool_app = Pool.query.filter_by(name=form.pool_appro.data).first()
 			pool_app.statut = 'repechage'
 			db.session.commit()
-			#extrait les poolers du pool
+			#extrait les poolers du pool et envoi un courriel de confirmation
 			les_poolers = [pooler.strip("' ") for pooler in pool_app.poolers.strip('[]').split(',')]
 			list_email = [User.query.filter_by(username=pooler).first().email for pooler in les_poolers]
 			les_poolers = list(zip(les_poolers, list_email))
@@ -341,7 +351,23 @@ def administration():
 			pool_appro(les_poolers, pool_app.name)
 
 			pool_attent = Pool.query.filter_by(statut = 'en_appro').all()
-			form.pool.choices=[pool.name for pool in pool_attent]
+			form.pool_appro.choices=[pool.name for pool in pool_attent]
+
+
+		if form.list_pool.data and form.efface_pool.data:
+			#change le statut du pool
+			pool_eff = Pool.query.filter_by(name=form.list_pool.data).first()
+			selectionInPool = Selection.query.filter_by(pool_id = pool_eff.id).all()
+			for selection in selectionInPool:
+				db.session.delete(selection)
+				db.session.commit()
+			db.session.delete(pool_eff)
+			db.session.commit()
+			#regenere les selectionlist
+			form.pool_appro.choices=[pool.name for pool in pool_attent]
+			form.list_pool.choices=[pool.name for pool in Pool.query.all()]
+
+
 
 		#lance une routine de mise à jour
 		if form.routine.data:

@@ -8,15 +8,13 @@
 		
 			{{ form.hidden_tag() }}
 			<p>
-			{{ form.pool.label }}<br>
-			{{ form.pool(size=3, class='form-control') }}<br>
+			{{ form.pool_appro.label }}<br>
+			{{ form.pool_appro(size=3, class='form-control') }}<br>
 			{{ form.approuve_pool(class='btn-primary') }}<br>
-			{{ form.selection.label }}<br>
-			{{ form.selection(size=3, class='form-control') }}<br>
-			
-			{% for error in form.pool.errors %}
-			<span style="color: red">[{{ error }}]</span>
-			{% endfor %}
+			{{ form.list_pool.label }}<br>
+			{{ form.list_pool(size=3, class='form-control') }}<br>
+			{{ form.efface_pool(class='btn-danger') }}<br>
+
 			</p>
 			{{ form.routine }}
 		</div>

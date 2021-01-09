@@ -41,7 +41,7 @@ class User(UserMixin, db.Model):
 
 class Joueur(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	alias = db.Column(db.String(9), index=True)
+	alias = db.Column(db.String(9), index=True, unique=True)
 	nom = db.Column(db.String(64), index=True)
 	position = db.Column(db.String(2), index=True)
 	grandeur = db.Column(db.Float, index=True)
@@ -66,5 +66,5 @@ class Selection(db.Model):
 	pool_id = db.Column(db.Integer, db.ForeignKey('pool.id'))
 
 #les statitiques des années précédentes
-#class2020 = pd.read_excel('class2020.xlsx')
+class2020 = {'Fred': [76,129,205], 'Leo':[58,86,144], 'Ben':[53,86,139], 'Stef':[55,78,133], 'Ian':[50,	82,	132], 'Will':[52,80,132] }
 

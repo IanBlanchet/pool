@@ -1,8 +1,8 @@
-"""rependre la db
+"""original
 
-Revision ID: 5ded982dd967
+Revision ID: 96c6a9900c30
 Revises: 
-Create Date: 2021-01-07 17:15:40.873209
+Create Date: 2021-01-07 19:03:12.870616
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5ded982dd967'
+revision = '96c6a9900c30'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_joueur_age'), 'joueur', ['age'], unique=False)
-    op.create_index(op.f('ix_joueur_alias'), 'joueur', ['alias'], unique=False)
+    op.create_index(op.f('ix_joueur_alias'), 'joueur', ['alias'], unique=True)
     op.create_index(op.f('ix_joueur_equipe'), 'joueur', ['equipe'], unique=False)
     op.create_index(op.f('ix_joueur_grandeur'), 'joueur', ['grandeur'], unique=False)
     op.create_index(op.f('ix_joueur_nom'), 'joueur', ['nom'], unique=False)

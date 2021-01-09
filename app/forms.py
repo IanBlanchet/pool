@@ -43,6 +43,7 @@ class PecheForm(FlaskForm):
 	nb_joueur = IntegerField('Nombre de joueurs par Équipe')
 	select = SubmitField('sélectionne')
 	complet = SubmitField('fermer le repêchage')
+	undo = SubmitField('annuler la Sélection')
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -62,7 +63,8 @@ class ModUsager(FlaskForm):
 	submit = SubmitField('Enregistre')
 
 class Admin(FlaskForm):
-	pool = SelectField('pool')
-	selection = SelectField('selection')
+	pool_appro = SelectField('pool à approuver')
+	list_pool = SelectField('List de toutsles pools')
 	approuve_pool = SubmitField('Approuve le pool')
+	efface_pool = SubmitField('Efface le pool')
 	routine = SubmitField('Execute routine de mis a jour')
