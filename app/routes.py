@@ -148,7 +148,7 @@ def accueil_pool():
 			choix_pooler.clear()
 			lespool = Pool.query.filter(Pool.statut != 'en_appro').all()
 			return render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=[])
-	choix_pooler.clear()
+		choix_pooler.clear()
 
 	return render_template('accueil_pool.html', form=form, lespool=lespool, choix_pooler=choix_pooler)
 	
