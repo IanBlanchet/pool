@@ -310,7 +310,7 @@ def detailUser(user_name, pool_id):
 		except:
 			continue
 	z=len(pool_data)
-	print(pool_data.head())
+	
 
 	return render_template('mesjoueur.html', pool=pool_name, sommaire=pool_data, username=user_name, z=z)
 
