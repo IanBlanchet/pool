@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<h1>{{ pool }}</h1><br>
+<h2>{{ username }}</h2>
+
+
+
+ <div>
+    <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Joueur</th>
+        <th>But</th>
+        <th>Passe</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+  {% for i in range(z)%}
+
+      <tr>
+        <td>{{ sommaire.iloc[i,0]}}</td>
+        <td>{{ sommaire.iloc[i,1]}}</td>
+        <td>{{ sommaire.iloc[i,2]}}</td>
+        <td>{{ sommaire.iloc[i,3]}}</td>
+      </tr>
+  {% endfor %}
+    </tbody>
+ 	</table>
+ </div><br>
+
+
+  
+     
+
+{% endblock %}

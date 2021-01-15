@@ -47,7 +47,7 @@
   {% for i in range(pool[0]) %}
 
       <tr>
-        <td>{{ pool[2].loc[i, 'Pooler'] }}</td>
+        <td><a href="{{ url_for('detailUser', user_name= (pool[2].loc[i, 'Pooler']) , pool_id=pool[3] ) }}" class="btn btn-warning"">{{ pool[2].loc[i, 'Pooler'] }}</a></td>
         <td>{{ pool[2].loc[i, 'G'] }}</td>
         <td>{{ pool[2].loc[i, 'A'] }}</td>
         <td>{{ pool[2].loc[i, 'PTS'] }}</td>
@@ -64,7 +64,6 @@
      
 </div>
 </div>
-
 
 
 

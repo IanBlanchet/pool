@@ -9,6 +9,7 @@ from datetime import date, datetime
 import pandas as pd
 from app.email import send_password_reset_email, pool_appro, accueil_pooler
 from collections import Counter
+from app import ajax_routes
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -232,14 +233,19 @@ def projection():
 
 
 
+#fonction pour creer dataframe des stats à jour LNH
+def MisAJour():
+	stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2021_skaters.html", header=1)[0]
+	detail = pd.DataFrame(stats_detail)
+	stats = detail[['Player', 'G', 'A', 'PTS']]
+	stats.fillna(0, inplace=True)
+	return stats
+
 @app.route("/monpool/<int:user_id>", methods=["GET", "POST"])
 @login_required
 def monpool(user_id):
 
-	stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2020_skaters.html", header=1)[0]
-	detail = pd.DataFrame(stats_detail)
-	stats = detail[['Player', 'G', 'A', 'PTS']]
-	stats.fillna(0, inplace=True)
+
 	#creer une routine pour accéder seulement au pool de l'usager logger
 	
 	mes_pools=[]
@@ -252,6 +258,8 @@ def monpool(user_id):
 			for select in data:
 				
 				pool_data = pool_data.append({'Joueur':select.stats.nom,'Pooler':select.poolers.username}, ignore_index=True)
+
+			stats = MisAJour()
 
 
 
@@ -274,10 +282,38 @@ def monpool(user_id):
 			
 			
 			
-			mes_pools.append([len(sommaire), pool.name, sommaire])
+			mes_pools.append([len(sommaire), pool.name, sommaire, pool.id])
 
 			
 	return render_template('monpool.html', mes_pools=mes_pools, histo=class2020)
+
+
+@app.route("/monpool/<string:user_name>/<int:pool_id>", methods=["GET", "POST"])
+@login_required
+def detailUser(user_name, pool_id):
+	user_id = User.query.filter_by(username=user_name).first().id
+	pool_name = Pool.query.filter_by(id=pool_id).first().name
+	mes_joueur = Selection.query.filter((Selection.pool_id == pool_id) & (Selection.user_id==user_id)).all()
+	pool_data = pd.DataFrame(columns=['Joueur', 'G', 'A', 'PTS'])
+	stats = MisAJour()
+	for joueur in mes_joueur:
+		pool_data = pool_data.append({'Joueur':joueur.stats.nom}, ignore_index=True)
+	for i in range(len(pool_data)):
+		joueur = stats[stats.Player == pool_data.iloc[i,0]]
+		try:
+			nb_but = int(joueur.G)
+			nb_pass = int(joueur.A)
+			nb_pts = int(joueur.PTS)
+			pool_data.iloc[i,1] = nb_but
+			pool_data.iloc[i,2] = nb_pass
+			pool_data.iloc[i,3] = nb_pts
+		except:
+			continue
+	z=len(pool_data)
+	print(pool_data.head())
+
+	return render_template('mesjoueur.html', pool=pool_name, sommaire=pool_data, username=user_name, z=z)
+
 
 
 @app.route("/administration", methods=["GET", "POST"])
@@ -382,7 +418,7 @@ def administration():
 					db.session.commit()
 				else:
 					print(df.loc[i,'Nom'])'''
-			user = User.query.filter_by(username='Bibi').first()
+			user = User.query.filter_by(username='rilliamwolland').first()
 			db.session.delete(user)
 			db.session.commit()	
 

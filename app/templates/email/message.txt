@@ -1,0 +1,9 @@
+Bonjour {{ user.username }},
+
+Votre pool {{ pool }} est approuvé.  Click sur le lien suivant pour te rendre sur l'application :
+
+{{ url_for('login', _external=True) }}
+
+Avec dévouement,
+
+L'équipe du Pool_2021

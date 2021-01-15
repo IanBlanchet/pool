@@ -31,7 +31,7 @@
 			{{ form.hidden_tag() }}
 			<p>
 			{{ form.joueurs.label }}<br>
-			{{ form.joueurs(size=20, class='form-control', ondblclick='affPlayer()') }}<br>
+			{{ form.joueurs(size=15, class='form-control',onclick="envoi('/affImage')" ,ondblclick='affPlayer()') }}<br>
 			{{ form.select(class='btn btn-primary') }}
 			{% for error in form.joueurs.errors %}
 			<span style="color: red">[{{ error }}]</span>
@@ -39,11 +39,30 @@
 			</p>
 			<script>
 				function affPlayer(){
-					alert('test')
+					joueur= document.getElementById('joueurs');
+					alert(joueur.value.slice(4,-11));
 
 				}
+
+				  function envoi(url) {
+  					joueur= document.getElementById('joueurs');
+  					data = {'selection':joueur.value.slice(4,-10).trim()};
+  					let alias = fetch(url, { 
+  						method:'POST',
+  						body: JSON.stringify(data),
+  						headers: {'Content-Type':'application/json;charset=utf-8'}
+
+  					})
+     				photo_joueur = document.getElementById('photo');
+     			
+          			
+  					alias.then(response => response.json()).then(data =>  photo_joueur.src='https://www.hockey-reference.com/req/202008181/images/headshots/' + data.test + '-2020.jpg');
+  					
+
+  				};
+  		
 			</script>
-		
+		<p></p>
 		</div>
 		<div class='col-sm-2'>
 			<p>
@@ -54,7 +73,7 @@
 			{% endfor %}
 			</p>
 			{{ form.undo(class='btn btn-danger') }}
-		
+
 		</div>
 		<div class='col-sm-6'>
 			<p>
@@ -89,7 +108,16 @@
   			</div>
 		</div>
 	</div>
-
+<div class='row'>
+	<div class='col-sm-4'>
+		
+		<img id='photo' src=''>
+		
+		
+	</div>
+</div>
 </div>
 </form>
+
+
 {% endblock %}
