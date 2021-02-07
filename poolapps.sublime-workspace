@@ -52,7 +52,7 @@
 			"file": "app/routes.py",
 			"settings":
 			{
-				"buffer_size": 13473,
+				"buffer_size": 14557,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -70,7 +70,7 @@
 			"file": "app/email.py",
 			"settings":
 			{
-				"buffer_size": 1223,
+				"buffer_size": 1523,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -86,31 +86,52 @@
 			}
 		},
 		{
+			"file": "app/templates/email/message.txt",
+			"settings":
+			{
+				"buffer_size": 208,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "Bonjour {{ user.username }},"
+			}
+		},
+		{
+			"file": "app/templates/email/message.html",
+			"settings":
+			{
+				"buffer_size": 280,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "app/templates/monpool.html",
 			"settings":
 			{
-				"buffer_size": 1349,
+				"buffer_size": 1474,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\n{% extends 'layout.html' %}\n\n\n\n{% block body %}\n<form action=\"\" method=\"post\" novalidate>\n<div class='container'>\n\t<div class='row'>\n\t\t<div class='col-sm-6'>\n\t\t\t<h1>Repêchage - {{ pool_actif.name }}</h1>\n\t\t</div>\n\t\t<div class='col-sm-6'>\n\t\t\t<h1>Choix complétés</h1> \n\t\t</div>\n\n\t</div>\n\n\t<div class='row'>\n\t\t<div class='col-sm-6'>\n\t\t\t<p></p>\n\t\t</div>\n\t\t<div class='col-sm-6'>\n\t\t\t<p>{{ counter }}</p> \n\t\t</div>\n\t</div>\n\n\t<div class='row'>\n\t\t<div class='col-sm-4'>\n\t\t\n\t\t\t{{ form.hidden_tag() }}\n\t\t\t<p>\n\t\t\t{{ form.joueurs.label }}<br>\n\t\t\t{{ form.joueurs(size=15, class='form-control',onclick=\"envoi('/affImage')\" ,ondblclick='affPlayer()') }}<br>\n\t\t\t{{ form.select(class='btn btn-primary') }}\n\t\t\t{% for error in form.joueurs.errors %}\n\t\t\t<span style=\"color: red\">[{{ error }}]</span>\n\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t\t<script>\n\t\t\t\tfunction affPlayer(){\n\t\t\t\t\tjoueur= document.getElementById('joueurs');\n\t\t\t\t\talert(joueur.value.slice(4,-11));\n\n\t\t\t\t}\n\n\t\t\t\t  function envoi(url) {\n  \t\t\t\t\tjoueur= document.getElementById('joueurs');\n  \t\t\t\t\tdata = {'selection':joueur.value.slice(4,-10).trim()};\n  \t\t\t\t\tlet alias = fetch(url, { \n  \t\t\t\t\t\tmethod:'POST',\n  \t\t\t\t\t\tbody: JSON.stringify(data),\n  \t\t\t\t\t\theaders: {'Content-Type':'application/json;charset=utf-8'}\n\n  \t\t\t\t\t})\n     \t\t\t\tphoto_joueur = document.getElementByClass('joueur');\n     \t\t\t\tstats_joueur = document.getElementById('stati');\n     \t\t\t\t\n     \t\t\t\n          \t\t\t\n  \t\t\t\t\t// alias.then(response => response.json()).then(data =>  photo_joueur.src='https://www.hockey-reference.com/req/202008181/images/headshots/' + data.test + '-2020.jpg');\n  \t\t\t\t\talias.then(response => response.json()).then(data => ReactDOM.render(<p>data.test</p>, document.getElementById('joueur')));\n  \t\t\t\t\t\n  \t\t\t\n\n  \t\t\t\t};\n  \t\t\n\t\t\t</script>\n\t\t<p></p>\n\t\t</div>\n\t\t<div class='col-sm-2'>\n\t\t\t<p>\n\t\t\t{{ form.pooler.label }}<br>\n\t\t\t{{ form.pooler(size=nb_pooler, class='form-control') }}<br>\n\t\t\t{% for error in form.pooler.errors %}\n\t\t\t<span style=\"color: red\">[{{ error }}]</span>\n\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t\t{{ form.undo(class='btn btn-danger') }}\n\n\t\t</div>\n\t\t<div class='col-sm-6'>\n\t\t\t<p>\n\t\t\t{{ form.complet(class='btn btn-success')}}\n\t\t\t</p>\n\t\t\t<div class=\"table-responsive\">\n\t\t\t\t<table class=\"table\">\n\t\t\t\t\t<thead>\n      \t\t\t\t\t<tr>\n        \t\t\t\t\t<th>ordre</th>\n        \t\t\t\t\t<th>Pooler</th>\n        \t\t\t\t\t<th>Choix</th>\n        \t\t\t\t\t<th>Position</th>\n        \t\t\t\t\t<th>Équipe</th>\n      \t\t\t\t\t</tr>\n    \t\t\t\t</thead>\n    \t\t\t\t<tbody>\n\n    \t\t\t\t{% set count = namespace(value=z) %}\n    \t\t\t\t{% for choix in selection %}\n      \t\t\t\t\t<tr>\n        \t\t\t\t\t<td>{{ count.value }}</td>\n        \t\t\t\t\t<td>{{ choix.poolers.username }}</td>\n        \t\t\t\t\t<td>{{ choix.stats.nom }}</td>\n        \t\t\t\t\t<td>{{ choix.stats.position }}</td>\n        \t\t\t\t\t<td>{{ choix.stats.equipe }}</td>\n        \t\t\t\t\t{% set count.value = count.value - 1 %}\n      \t\t\t\t\t</tr>\n      \t\t\t\t{% endfor %}\n        \t\t\t</tbody>\n  \t\t\t\t</table>\n  \t\t\t</div>\n\t\t</div>\n\t</div>\n<div class='row'>\n\t<div class='col-sm-4'>\n\t\t<div id='joueur'>\n\t\t<img id='photo' src='https://www.hockey-reference.com/req/202008181/images/headshots/bennjo01-2020.jpg'>\n\t\t<p id='stati'>hhh</p>\n\t\t</div>\n\t</div>\n</div>\n</div>\n</form>\n\n\n{% endblock %}",
 			"file": "app/templates/repechage.html",
-			"file_size": 3174,
-			"file_write_time": 132548433043163355,
 			"settings":
 			{
-				"buffer_size": 3169,
+				"buffer_size": 2832,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "{% extends 'layout.html' %}\n\n\n{% block body %}\n<form action=\"\" method=\"post\" novalidate>\n<div class='container'>\n\t<div class='row'>\n\t\t<div class='col-sm-8'>\n\t\t\t<h1>Nouveau pool</h1>\n\t\t</div>\n\t\t<div class='col-sm-4'>\n\t\t\t<h1>Pools actifs</h1> \n\t\t</div>\n\t</div>\n\t<div class='row'>\n\t\t<div class='col-sm-2'>\n\t\t\n\t\t\t{{ form.hidden_tag() }}\n\t\t\t<p>\n\t\t\t{{ form.pooler.label }}<br>\n\t\t\t{{ form.pooler(size=3, class='form-control') }}<br>\n\t\t\t{{ form.add(class='btn btn-primary') }}\n\t\t\t{% for error in form.pooler.errors %}\n\t\t\t<span style=\"color: red\">[{{ error }}]</span>\n\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t\n\t\t</div>\n\t\t<div class='col-sm-6'>\n\t\t\n\t\t\t{{ form.hidden_tag() }}\n\t\t\t<p>\n\t\t\t{{ form.name.label }}<br>\n\t\t\t\t{% if nom_pool %}\n\t\t\t\t{{ form.name(value=nom_pool, class='form-control') }}\n\t\t\t\t{% else %}\n\t\t\t\t{{ form.name(class='form-control') }}\n\t\t\t\t{% endif %}\n\t\t\t{% for error in form.name.errors %}\n\t\t\t<span style=\"color: red\">[{{ error }}]</span>\n\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t\t<p>\n\t\t\t{% for pooler in choix_pooler %}\n\t\t\t{{ pooler }}<br>\n\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t\t<p onclick='alert(\"Votre nouveau pool sera approuvé sous peu par votre fringant administrateur\")'>\n\t\t\t\t<a href='#popupInfo' data-rel='popup' data-transition='pop' title='Assure toi avoir tes poolers avant de créer le pool'>\n\t\t\t{{ form.creer(class='btn btn-success') }}</a>\n\t\t\t</p>\n\t\t\n\t\t</div>\n\t\t<div class='col-sm-4'>\n\t\t\t<p>\n\t\t\t\t{% for pool in lespool %}\n\t\t\t\t{% if pool.statut == 'repechage'%}\n\t\t\t\t<a href=\"{{ url_for('repechage', pool_id=pool.id ) }}\" class=\"btn btn-info\">{{ pool.name }}</a><span class='btn-warning'> statut: {{ pool.statut }}</span>\n\t\t\t\t<p>{% for pooler in (pool.poolers.strip('[]').split(',')) %}\n\t\t\t\t{{ pooler.strip(\"' \") }},{% endfor %}</p><br>\n\t\t\t\t{% else %}\n\t\t\t\t<a href=\"{{ url_for('monpool', user_id=current_user.id ) }}\" class=\"btn btn-info\">{{ pool.name }}</a><span class='btn-warning'> statut: {{ pool.statut }}</span>\n\t\t\t\t<p>{% for pooler in (pool.poolers.strip('[]').split(',')) %}\n\t\t\t\t{{ pooler.strip(\"' \") }},{% endfor %}</p><br>\n\t\t\t\t{% endif%}\n\t\t\t\t{% endfor %}\n\t\t\t</p>\n\t\t</div>\n\t</div>\n\n</div>\n</form>\n\n<p id='test'>allo</p>\n<button onclick=\"envoi('/detJoueur')\">AJAX</button>\n<script type=\"text/javascript\">\n\n  function envoi(url) {\n  \tdata = {'selection':2};\n  \tlet text = fetch(url, { \n  \t\tmethod:'POST',\n  \t\tbody: JSON.stringify(data),\n  \t\theaders: {'Content-Type':'application/json;charset=utf-8'}\n\n  })\n     joueur = document.getElementById('test');\n          text.then(response => response.json()).then(data => joueur.innerHTML=data.test);\n  \t;\n\n  }\n\n</script>\n{% endblock %}",
+			"file": "app/templates/mesjoueur.html",
+			"settings":
+			{
+				"buffer_size": 588,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "app/templates/accueil_pool.html",
-			"file_size": 2560,
-			"file_write_time": 132547841393601374,
 			"settings":
 			{
 				"buffer_size": 2557,
@@ -163,10 +184,10 @@
 	},
 	"file_history":
 	[
+		"/home/ian/Documents/apppools/app/templates/email/pool_appro.txt",
+		"/home/ian/Documents/apppools/app/templates/email/pool_appro.html",
 		"/home/ian/Documents/apppools/app/templates/email/accueil.txt",
 		"/home/ian/Documents/apppools/app/templates/email/accueil.html",
-		"/home/ian/Documents/apppools/app/templates/email/pool_appro.html",
-		"/home/ian/Documents/apppools/app/templates/email/pool_appro.txt",
 		"/home/ian/Documents/desk_app/test.py",
 		"/home/ian/Documents/apppools/Procfile",
 		"/home/ian/Documents/pool_2021/app/__init__.py",
@@ -321,7 +342,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -350,7 +371,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -366,8 +387,8 @@
 						"selection":
 						[
 							[
-								202,
-								202
+								1247,
+								1247
 							]
 						],
 						"settings":
@@ -376,10 +397,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 225.0,
+						"translation.y": 90.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -408,7 +429,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -437,7 +458,7 @@
 						"translation.y": 74.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -446,15 +467,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13473,
+						"buffer_size": 14557,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								443,
-								443
+								10464,
+								10464
 							]
 						],
 						"settings":
@@ -463,10 +484,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4045.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -482,19 +503,20 @@
 						"selection":
 						[
 							[
-								940,
-								940
+								395,
+								395
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -503,15 +525,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1223,
+						"buffer_size": 1523,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								208,
-								208
+								1523,
+								1523
 							]
 						],
 						"settings":
@@ -522,7 +544,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -551,7 +573,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 14,
 					"type": "text"
 				}
 			]
@@ -562,19 +584,134 @@
 			[
 				{
 					"buffer": 8,
-					"file": "app/templates/monpool.html",
+					"file": "app/templates/email/message.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1349,
+						"buffer_size": 208,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								881,
-								881
+								208,
+								208
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Bonjour {{ user.username }},",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "app/templates/email/message.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 280,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								222,
+								222
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "app/templates/monpool.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1474,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1124,
+								1124
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "app/templates/repechage.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2832,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1065,
+								1065
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "app/templates/mesjoueur.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 588,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								481,
+								481
 							]
 						],
 						"settings":
@@ -591,35 +728,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "app/templates/repechage.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3169,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1655,
-								1655
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 585.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 13,
 					"file": "app/templates/accueil_pool.html",
 					"semi_transient": false,
 					"settings":
@@ -631,8 +740,8 @@
 						"selection":
 						[
 							[
-								2185,
-								2185
+								1448,
+								1448
 							]
 						],
 						"settings":
@@ -641,14 +750,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 630.0,
+						"translation.y": 690.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 14,
 					"file": "app/templates/admin.html",
 					"semi_transient": false,
 					"settings":
@@ -673,7 +782,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 10,
 					"type": "text"
 				}
 			]

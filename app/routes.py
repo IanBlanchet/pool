@@ -238,6 +238,7 @@ def MisAJour():
 	stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2021_skaters.html", header=1)[0]
 	detail = pd.DataFrame(stats_detail)
 	stats = detail[['Player', 'G', 'A', 'PTS']]
+	stats.drop_duplicates('Player', keep='first', inplace=True)
 	stats.fillna(0, inplace=True)
 	return stats
 
@@ -418,11 +419,12 @@ def administration():
 					db.session.commit()
 				else:
 					print(df.loc[i,'Nom'])'''
-			user = User.query.filter_by(username='rilliamwolland').first()
-			db.session.delete(user)
-			db.session.commit()	
-
-
+			select = Joueur.query.filter_by(nom='Patrik Laine').first()
+			
+			select.nom = 'Patrik Laine'
+			
+			db.session.commit()
+			
 			return redirect(url_for('home'))
 
 
