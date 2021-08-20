@@ -10,7 +10,7 @@ import pandas as pd
 from app.email import send_password_reset_email, pool_appro, accueil_pooler
 from collections import Counter
 from app import ajax_routes
-
+import json
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -321,6 +321,23 @@ def detailUser(user_name, pool_id):
 @login_required
 def administration():
 
+
+	joueur_test = Joueur.query.filter_by(alias='test_json').first()
+	joueur_test_json = json.dumps(joueur_test.info, indent=2)
+	print(joueur_test_json)
+	'''(alias='test_json',
+						position='AD',
+						grandeur=5.5,
+						age=46,
+						equipe='JSON',
+						info={'surnom':'le test de json',
+								'Ville natale' : 'Godbout',
+								'langue':'français',
+								'menu': {'entree': 34,'plat':45}})
+
+	db.session.add(joueur_test)
+	db.session.commit()'''
+
 	# code utilisé pour meubler la base de données des joueurs
 	"""stats_detail = pd.read_html("https://www.hockey-reference.com/leagues/NHL_2020_skaters.html", header=1)[0]
 	detail = pd.DataFrame(stats_detail)
@@ -428,7 +445,7 @@ def administration():
 			return redirect(url_for('home'))
 
 
-		return render_template('admin.html', form=form)
+		return render_template('admin.html', form=form, joueur_test= joueur_test_json)
 
-
-	return redirect(url_for('home'))
+	return render_template('admin.html', form=form, joueur_test= joueur_test_json)
+	#return redirect(url_for('home'))

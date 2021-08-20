@@ -20,5 +20,18 @@
 		</div>
 	</div>
 </form>
-
+<script>
+	let joueur = JSON.parse({{ joueur_test| tojson }});
+	console.log(joueur);
+	let count = 0;
+	const key = Object.keys(joueur)
+	const affiche = () => {
+		document.getElementById('affiche_json').innerHTML=joueur[key[count]];
+		count += 1
+	 };
+</script>
+<form>
+	<input id='test_json' type='sumbit' value='test_json' onclick="affiche()">
+	<p id='affiche_json'></p>
+</form>
 {% endblock %}

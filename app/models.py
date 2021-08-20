@@ -6,6 +6,7 @@ import pandas as pd
 from time import time
 import jwt
 from app import app
+from sqlalchemy.dialects.postgresql import JSON
 
 @login.user_loader
 def load_user(id):
@@ -48,6 +49,7 @@ class Joueur(db.Model):
 	age = db.Column(db.Integer, index=True)
 	equipe = db.Column(db.String(64), index=True)
 	pool = db.relationship('Selection', backref='stats', lazy='dynamic')
+	info = db.Column(JSON)
 
 
 
@@ -59,8 +61,8 @@ class Pool(db.Model):
 	selectionneur = db.Column(db.String(64))
 	statut = db.Column(db.String(16), default='en_appro')
 	pool = db.relationship('Selection', backref='pools', lazy='dynamic')
-	
-	
+	def __repr__(self):
+		return f"<Pool {self.name} créer le { self.creation} et inclut les poolers suivant { self.poolers}>"
 
 class Selection(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

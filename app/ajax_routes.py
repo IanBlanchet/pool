@@ -24,7 +24,9 @@ def affImage():
 	print(select_joueur.alias)
 	stats_detail = pd.read_html("https://www.hockey-reference.com/players/"+select_joueur.alias[0]+"/"+select_joueur.alias+".html", header=1)[0]
 	detail = pd.DataFrame(stats_detail)
-	print(detail.loc[0,'PTS'])
+	detail_json = detail.to_json()
+	print(detail_json)
+	
 
 		
-	return {"test":select_joueur.alias, "stats":str(detail.loc[0,'PTS'])}
+	return {"test":select_joueur.alias, "stats":detail_json}

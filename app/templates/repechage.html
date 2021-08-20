@@ -54,9 +54,10 @@
 
   					})
      				photo_joueur = document.getElementById('photo');
-     			
+					annee = document.getElementById('annee');
           			
-  					alias.then(response => response.json()).then(data =>  photo_joueur.src='https://www.hockey-reference.com/req/202008181/images/headshots/' + data.test + '-2020.jpg');
+  					alias.then(response => response.json()).then(data =>   {photo_joueur.src='https://www.hockey-reference.com/req/202008181/images/headshots/' + data.test + '-2020.jpg';
+					  annee.innerHTML=data.stats.Season;});
   					
 
   				};
@@ -112,7 +113,7 @@
 	<div class='col-sm-4'>
 		
 		<img id='photo' src=''>
-		
+		<p id='annee'></p>
 		
 	</div>
 </div>
